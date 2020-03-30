@@ -13,9 +13,9 @@ from tests.base import RAML_08, VALIDATE_08
 
 
 MAIN_USAGE = 'Usage: main [OPTIONS] COMMAND [ARGS]...\n\n'
-TREE_USAGE = 'Usage: tree [OPTIONS] RAMLFILE\n\n'
-UPDATE_USAGE = 'Usage: update [OPTIONS]\n\n'
-VALIDATE_USAGE = 'Usage: validate [OPTIONS] RAMLFILE\n\n'
+TREE_USAGE = 'Usage: tree [OPTIONS] RAMLFILE\n'
+UPDATE_USAGE = 'Usage: update [OPTIONS]\n'
+VALIDATE_USAGE = 'Usage: validate [OPTIONS] RAMLFILE\n'
 
 MAIN_HELP = MAIN_USAGE + """\
   Yet Another RAML Parser
@@ -25,11 +25,12 @@ Options:
 
 Commands:
   tree      Visualize the RAML file as a tree.
-  update    Update RAMLfications' supported MIME types...
+  update    Update RAMLfications' supported MIME types from IANA.
   validate  Validate a RAML file.
 """
 
 TREE_HELP = TREE_USAGE + """\
+
   Visualize the RAML file as a tree.
 
 Options:
@@ -42,6 +43,7 @@ Options:
 """
 
 UPDATE_HELP = UPDATE_USAGE + """\
+
   Update RAMLfications' supported MIME types from IANA.
 
 Options:
@@ -49,6 +51,7 @@ Options:
 """
 
 VALIDATE_HELP = VALIDATE_USAGE + """\
+
   Validate a RAML file.
 
 Options:
@@ -73,7 +76,7 @@ def _handles_no_file(runner, usage_prefix, cli):
     Assertion helper: Command complains about a missing file argument.
     """
     result = runner.invoke(cli, [])
-    expected = usage_prefix + 'Error: Missing argument "ramlfile".\n'
+    expected = usage_prefix + 'Error: Missing argument \'RAMLFILE\'.\n'
     check_result(2, expected, result)
 
 
@@ -84,8 +87,8 @@ def _handles_nonexistent_file(runner, usage_prefix, cli):
     for args in [['nonexistent'], ['nonexistent', 'extra']]:
         result = runner.invoke(cli, args)
         expected = usage_prefix + (
-            'Error: Invalid value for "ramlfile": '
-            'Path "nonexistent" does not exist.\n')
+            'Error: Invalid value for \'RAMLFILE\': '
+            'Path \'nonexistent\' does not exist.\n')
         check_result(2, expected, result)
 
 
@@ -121,9 +124,10 @@ def test_validate_bad_file_handling(runner):
     """
     The validate command handles bad file arguments.
     """
-    _handles_no_file(runner, VALIDATE_USAGE, main.validate)
-    _handles_nonexistent_file(runner, VALIDATE_USAGE, main.validate)
-    _handles_file_extra_arg(runner, VALIDATE_USAGE, main.validate)
+    usage_message = VALIDATE_USAGE + "Try 'validate -h' for help.\n\n"
+    _handles_no_file(runner, usage_message, main.validate)
+    _handles_nonexistent_file(runner, usage_message, main.validate)
+    _handles_file_extra_arg(runner, usage_message, main.validate)
 
 
 def test_validate(runner):
@@ -168,9 +172,10 @@ def test_tree_bad_file_handling(runner):
     """
     The tree command handles bad file arguments.
     """
-    _handles_no_file(runner, TREE_USAGE, main.tree)
-    _handles_nonexistent_file(runner, TREE_USAGE, main.tree)
-    _handles_file_extra_arg(runner, TREE_USAGE, main.tree)
+    usage_message = TREE_USAGE + "Try 'tree -h' for help.\n\n"
+    _handles_no_file(runner, usage_message, main.tree)
+    _handles_nonexistent_file(runner, usage_message, main.tree)
+    _handles_file_extra_arg(runner, usage_message, main.tree)
 
 
 def test_tree(runner):
@@ -216,7 +221,7 @@ def test_update_unexpected_arg(runner):
     The update command rejects unexpected extra arguments.
     """
     result = runner.invoke(main.update, ['surprise'])
-    expected = UPDATE_USAGE + (
+    expected = UPDATE_USAGE + "Try 'update -h' for help.\n\n" + (
         'Error: Got unexpected extra argument (surprise)\n')
     check_result(2, expected, result)
 

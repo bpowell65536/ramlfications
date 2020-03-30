@@ -92,7 +92,7 @@ class RAMLDataType(object):
     display_name = attr.ib(repr=False, default=None)
     annotation   = attr.ib(repr=False, default=None)
     default      = attr.ib(repr=False, default=None)
-    description  = attr.ib(repr=False, default="", convert=BaseContent)
+    description  = attr.ib(repr=False, default="", converter=BaseContent)
     example      = attr.ib(repr=False, default=None)
     examples     = attr.ib(repr=False, default=None)
     # TODO: how to validate? See:
@@ -120,7 +120,7 @@ class DataTypeAttrs(object):
 
 
 @attr.s
-class BaseDataType(RAMLDataType, DataTypeAttrs):
+class BaseDataType(DataTypeAttrs, RAMLDataType):
     """
     Base class for all data types.
     """
@@ -133,7 +133,7 @@ class ObjectDataType(BaseDataType):
     Type class for RAML object data types.
     """
     properties            = attr.ib(repr=False, default=None,
-                                    convert=parse_properties)
+                                    converter=parse_properties)
     min_properties        = attr.ib(repr=False, default=0)
     max_properties        = attr.ib(repr=False, default=None)
     additional_properties = attr.ib(repr=False, default=None)
@@ -150,8 +150,8 @@ class ArrayDataType(BaseDataType):
     """
     items        = attr.ib(repr=False, default=None)
     unique_items = attr.ib(repr=False, default=False)
-    min_items    = attr.ib(repr=False, default=0, convert=int)
-    max_items    = attr.ib(repr=False, default=RAML_MAX_INT, convert=int)
+    min_items    = attr.ib(repr=False, default=0, converter=int)
+    max_items    = attr.ib(repr=False, default=RAML_MAX_INT, converter=int)
 
 
 @attr.s
@@ -181,11 +181,11 @@ class StringDataType(ScalarDataType):
     """
     Type class for RAML string data types.
     """
-    pattern    = attr.ib(repr=False, default=None, convert=create_re)
+    pattern    = attr.ib(repr=False, default=None, converter=create_re)
     # TODO: validate if int & if positive
-    min_length = attr.ib(repr=False, default=0, convert=int)
+    min_length = attr.ib(repr=False, default=0, converter=int)
     # TODO: validate if int and if positive
-    max_length = attr.ib(repr=False, default=RAML_MAX_INT, convert=int)
+    max_length = attr.ib(repr=False, default=RAML_MAX_INT, converter=int)
 
 
 @type_class("number")
@@ -240,9 +240,9 @@ class FileDataType(BaseScalarDataType):
     # TODO: validate on valid content-type strings
     file_type = attr.ib(repr=False, default=None)
     # TODO: validate if int & if positive
-    min_length = attr.ib(repr=False, default=0, convert=int)
+    min_length = attr.ib(repr=False, default=0, converter=int)
     # TODO: validate if int and if positive
-    max_length = attr.ib(repr=False, default=RAML_MAX_INT, convert=int)
+    max_length = attr.ib(repr=False, default=RAML_MAX_INT, converter=int)
 
 
 @attr.s

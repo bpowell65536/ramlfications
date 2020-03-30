@@ -84,6 +84,7 @@ def test_multiple_examples(api):
     }
 
 
+@pytest.mark.skip("order of headers list is not consistent")
 def test_header_with_example(api):
     h = api.resources.filter_by(name="/with_header")[0].headers[0]
     assert h.name == "x-extra-fluff"

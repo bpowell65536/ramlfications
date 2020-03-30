@@ -109,7 +109,7 @@ class BaseParameterParser(object):
                 ParamObj = self._classes[key]
             else:
                 @attr.s
-                class ParamObj(param_obj, mixin):
+                class ParamObj(mixin, param_obj):
                     pass
 
                 ParamObj.__name__ = param_obj.__name__ + suffix
@@ -151,7 +151,7 @@ class BodyParserMixin(object):
         )
 
 
-class ParameterParser(BaseParameterParser, BodyParserMixin):
+class ParameterParser(BodyParserMixin, BaseParameterParser):
     """
     Base parser for Named Parameters.
     """
