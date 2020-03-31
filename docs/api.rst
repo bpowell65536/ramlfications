@@ -14,6 +14,7 @@ RAML file/string.
 .. autofunction:: load
 .. autofunction:: loads
 .. autofunction:: validate
+   :noindex:
 
 
 Core
